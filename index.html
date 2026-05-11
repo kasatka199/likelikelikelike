@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-<title>Напиши блогеру</title>
+<title>Связь с блогером</title>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
@@ -39,7 +39,6 @@
     overflow-x: hidden;
   }
 
-  /* ── Background decoration ── */
   body::before {
     content: '';
     position: fixed;
@@ -121,6 +120,34 @@
     letter-spacing: 0.01em;
   }
 
+  /* ── Badges ── */
+  .hero-badges {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+  }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 4px 12px;
+    font-size: 11px;
+    color: var(--ink-soft);
+    font-weight: 400;
+    letter-spacing: 0.03em;
+  }
+  .badge-dot {
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
   /* ── Section label ── */
   .section-label {
     display: flex;
@@ -199,6 +226,7 @@
     text-align: center;
     animation: fadeUp 0.35s ease both;
     -webkit-tap-highlight-color: transparent;
+    position: relative;
   }
   .blogger-card:hover {
     border-color: var(--accent);
@@ -213,6 +241,16 @@
   }
   .blogger-card.selected .blogger-name { color: var(--accent-dark); font-weight: 500; }
   .blogger-card.hidden { display: none; }
+
+  /* Online dot */
+  .online-dot {
+    position: absolute;
+    top: 10px; right: 10px;
+    width: 7px; height: 7px;
+    background: #5DB075;
+    border-radius: 50%;
+    border: 1.5px solid var(--white);
+  }
 
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(10px); }
@@ -257,7 +295,6 @@
   .no-results {
     text-align: center;
     padding: 24px 0;
-    font-size: 14px;
     color: var(--ink-muted);
     display: none;
     font-style: italic;
@@ -304,16 +341,28 @@
     font-size: 13px;
     color: var(--accent-dark);
     font-weight: 400;
+    flex: 1;
   }
-  .selected-banner-text strong {
-    font-weight: 500;
+  .selected-banner-text strong { font-weight: 500; }
+  .selected-banner-status {
+    font-size: 11px;
+    color: #5DB075;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .selected-banner-status::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: #5DB075;
+    border-radius: 50%;
+    flex-shrink: 0;
   }
 
   /* ── No select hint ── */
   .no-select-hint {
     padding: 28px 24px;
     text-align: center;
-    font-size: 14px;
     color: var(--ink-muted);
     font-style: italic;
     font-family: 'Cormorant Garamond', serif;
@@ -321,6 +370,38 @@
     line-height: 1.5;
   }
   .no-select-hint span { font-size: 22px; display: block; margin-bottom: 6px; opacity: 0.5; }
+
+  /* ── Contact type tabs ── */
+  .contact-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+  .contact-tab {
+    flex: 1;
+    padding: 9px 8px;
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 400;
+    color: var(--ink-muted);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .contact-tab.active {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--cream);
+    font-weight: 500;
+  }
+  .contact-tab:not(.active):hover {
+    border-color: var(--accent);
+    color: var(--accent-dark);
+  }
 
   /* ── Form fields ── */
   #form-fields { display: none; }
@@ -359,7 +440,7 @@
     box-shadow: 0 0 0 3px rgba(196,168,130,0.18);
   }
   input[type=text]::placeholder, textarea::placeholder { color: var(--ink-muted); }
-  textarea { min-height: 120px; }
+  textarea { min-height: 110px; }
 
   .hint {
     font-size: 11.5px;
@@ -387,13 +468,6 @@
     -webkit-tap-highlight-color: transparent;
     position: relative;
     overflow: hidden;
-  }
-  .send-btn::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: rgba(255,255,255,0);
-    transition: background 0.15s;
   }
   .send-btn:hover { background: #2E2B25; box-shadow: 0 6px 24px rgba(26,24,20,0.25); transform: translateY(-1px); }
   .send-btn:active { transform: translateY(0); }
@@ -463,12 +537,10 @@
   }
   .footer-dot { display: inline-block; width: 3px; height: 3px; background: var(--accent); border-radius: 50%; vertical-align: middle; margin: 0 6px; }
 
-  /* ── Scrollbar for body ── */
   ::-webkit-scrollbar { width: 6px; }
   ::-webkit-scrollbar-track { background: var(--cream); }
   ::-webkit-scrollbar-thumb { background: var(--accent-light); border-radius: 6px; }
 
-  /* ── Mobile ── */
   @media (max-width: 500px) {
     .page { padding: 32px 16px 60px; }
     .hero { margin-bottom: 36px; padding-bottom: 28px; }
@@ -483,11 +555,10 @@
     .form-inner { padding: 18px; }
     .send-btn { padding: 13px 16px; }
     .success { padding: 48px 16px; }
+    .contact-tabs { flex-direction: column; }
   }
   @media (max-width: 360px) {
-    .bloggers-grid {
-      grid-template-columns: repeat(3, 1fr);
-    }
+    .bloggers-grid { grid-template-columns: repeat(3, 1fr); }
   }
 </style>
 </head>
@@ -495,75 +566,87 @@
 
 <div class="page" id="main-page">
 
-  <!-- Header -->
   <header class="hero">
-    <div class="hero-eyebrow">Личное письмо</div>
-    <h1>Напиши своему <em>блогеру</em></h1>
-    <p>Выбери блогера и отправь личное сообщение</p>
+    <div class="hero-eyebrow">Прямая связь</div>
+    <h1>Связаться с <em>блогером</em></h1>
+    <p>Выбери популярного блогера и позвони ему!</p>
+    <div class="hero-badges">
+      <div class="badge"><div class="badge-dot"></div>29 блогеров</div>
+      <div class="badge"><div class="badge-dot"></div>Бесплатно</div>
+      <div class="badge"><div class="badge-dot"></div>Официально совместно с Блогерами</div>
+    </div>
   </header>
 
   <div id="main-content">
 
-    <!-- Section label + search -->
     <div class="section-label">
-      Выбери блогера
+      Популярные блогеры
       <span id="count">29</span>
     </div>
 
     <div class="search-wrap">
       <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-      <input class="search-input" id="search" type="text" placeholder="Поиск по имени..." autocomplete="off" />
+      <input class="search-input" id="search" type="text" placeholder="Поиск блогера..." autocomplete="off" />
     </div>
 
-    <!-- Bloggers grid -->
     <div class="bloggers-grid" id="bloggers-grid"></div>
     <p class="no-results" id="no-results">Блогер не найден</p>
 
-    <!-- Form section -->
     <div class="form-section">
       <div class="selected-banner" id="selected-banner">
         <div class="selected-avatar-mini" id="selected-avatar-mini"></div>
-        <div class="selected-banner-text">Пишешь: <strong id="selected-name-banner"></strong></div>
+        <div class="selected-banner-text">Связь с: <strong id="selected-name-banner"></strong></div>
+        <div class="selected-banner-status">онлайн</div>
       </div>
 
       <div class="form-inner">
         <div id="form-fields">
           <div class="form-divider"></div>
+
+          <div class="contact-tabs">
+            <button class="contact-tab active" data-type="Сотрудничество">🤝 Сотрудничество</button>
+            <button class="contact-tab" data-type="Вопрос">💬 Вопрос</button>
+            <button class="contact-tab" data-type="Реклама">📣 Реклама</button>
+          </div>
+
           <div class="field">
             <label>Твоё имя</label>
             <input type="text" id="sender-name" placeholder="Как тебя зовут?" />
           </div>
           <div class="field">
-            <label>Тема письма</label>
-            <input type="text" id="subject" placeholder="О чём хочешь написать?" />
+            <label>Твой контакт</label>
+            <input type="text" id="contact-info" placeholder="Telegram, email или Instagram" />
+          </div>
+          <div class="field">
+            <label>Тема обращения</label>
+            <input type="text" id="subject" placeholder="Кратко опиши цель связи" />
           </div>
           <div class="field">
             <label>Сообщение</label>
-            <textarea id="message" placeholder="Напиши своё сообщение здесь..."></textarea>
-            <p class="hint">Письмо будет отправлено на официальную почту блогера</p>
+            <textarea id="message" placeholder="Опиши подробнее свой запрос..."></textarea>
+            <p class="hint">Обращение будет передано через официальный канал блогера</p>
           </div>
-          <button class="send-btn" id="send-btn">Отправить письмо</button>
+          <button class="send-btn" id="send-btn">Отправить обращение</button>
         </div>
 
         <p class="no-select-hint" id="no-select-hint">
           <span>✦</span>
-          Сначала выбери блогера выше
+          Выбери блогера выше, чтобы связаться
         </p>
       </div>
     </div>
 
   </div>
 
-  <!-- Success screen -->
   <div class="success" id="success-screen">
-    <div class="success-icon">✉️</div>
-    <h2>Письмо отправлено!</h2>
+    <div class="success-icon">🤝</div>
+    <h2>Обращение отправлено!</h2>
     <p id="success-msg"></p>
-    <button class="reset-btn" id="reset-btn">Написать ещё одно письмо</button>
+    <button class="reset-btn" id="reset-btn">Написать другому блогеру</button>
   </div>
 
   <div class="footer">
-    Сделано с заботой<span class="footer-dot"></span>Для настоящих фанатов
+    Официальный канал связи<span class="footer-dot"></span>Популярные блогеры
   </div>
 
 </div>
@@ -619,7 +702,7 @@ function getInitials(name) {
 }
 
 let selectedId = null;
-let selectedBlogger = null;
+let activeType = "Сотрудничество";
 const grid = document.getElementById("bloggers-grid");
 const banner = document.getElementById("selected-banner");
 const bannerName = document.getElementById("selected-name-banner");
@@ -628,6 +711,15 @@ const formFields = document.getElementById("form-fields");
 const noHint = document.getElementById("no-select-hint");
 const searchInput = document.getElementById("search");
 const noResults = document.getElementById("no-results");
+
+// Contact type tabs
+document.querySelectorAll(".contact-tab").forEach(tab => {
+  tab.addEventListener("click", () => {
+    document.querySelectorAll(".contact-tab").forEach(t => t.classList.remove("active"));
+    tab.classList.add("active");
+    activeType = tab.getAttribute("data-type");
+  });
+});
 
 bloggers.forEach((b, i) => {
   const pal = palettes[i % palettes.length];
@@ -644,7 +736,7 @@ bloggers.forEach((b, i) => {
     avatarHtml = `<div class="blogger-avatar" style="background:${pal.bg}; color:${pal.color};">${getInitials(b.name)}</div>`;
   }
 
-  card.innerHTML = `${avatarHtml}<div class="blogger-name">${b.name}</div>`;
+  card.innerHTML = `<div class="online-dot"></div>${avatarHtml}<div class="blogger-name">${b.name}</div>`;
   card.addEventListener("click", () => selectBlogger(b.id, b.name, b.photo, pal));
   grid.appendChild(card);
 });
@@ -663,11 +755,9 @@ searchInput.addEventListener("input", () => {
 
 function selectBlogger(id, name, photo, pal) {
   selectedId = id;
-  selectedBlogger = bloggers.find(b => b.id === id);
   document.querySelectorAll(".blogger-card").forEach(c => c.classList.remove("selected"));
   document.getElementById("card-" + id).classList.add("selected");
 
-  // Mini avatar in banner
   if (photo) {
     bannerAvatarMini.innerHTML = `<img src="${photo}" alt="${name}" onerror="this.parentElement.innerHTML='<span>${getInitials(name)}</span>'; this.parentElement.style.background='${pal.bg}'; this.parentElement.style.color='${pal.color}';" />`;
   } else {
@@ -684,14 +774,14 @@ function selectBlogger(id, name, photo, pal) {
 
 document.getElementById("send-btn").addEventListener("click", () => {
   const name = document.getElementById("sender-name").value.trim();
-  const subject = document.getElementById("subject").value.trim();
+  const contact = document.getElementById("contact-info").value.trim();
   const msg = document.getElementById("message").value.trim();
   if (!name || !msg) { alert("Пожалуйста, заполни имя и сообщение"); return; }
   const blogger = bloggers.find(b => b.id === selectedId);
   document.getElementById("main-content").style.display = "none";
   const sc = document.getElementById("success-screen");
   sc.style.display = "block";
-  document.getElementById("success-msg").textContent = `Твоё письмо «${subject || "Без темы"}» отправлено блогеру ${blogger.name}. Надеемся, ты получишь ответ!`;
+  document.getElementById("success-msg").textContent = `Твоё обращение по теме «${activeType}» отправлено блогеру ${blogger.name}. Ожидай ответа на указанный контакт!`;
 });
 
 document.getElementById("reset-btn").addEventListener("click", () => {
@@ -702,10 +792,10 @@ document.getElementById("reset-btn").addEventListener("click", () => {
   formFields.style.display = "none";
   noHint.style.display = "block";
   document.getElementById("sender-name").value = "";
+  document.getElementById("contact-info").value = "";
   document.getElementById("subject").value = "";
   document.getElementById("message").value = "";
   selectedId = null;
-  selectedBlogger = null;
   searchInput.value = "";
   document.querySelectorAll(".blogger-card").forEach(c => c.classList.remove("hidden"));
   noResults.style.display = "none";
