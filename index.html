@@ -560,20 +560,203 @@
   @media (max-width: 360px) {
     .bloggers-grid { grid-template-columns: repeat(3, 1fr); }
   }
+
+  /* ── Loading overlay ── */
+  .loading-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(247, 244, 239, 0.92);
+    backdrop-filter: blur(6px);
+    z-index: 100;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 24px;
+  }
+  .loading-overlay.active { display: flex; }
+
+  /* ── Choice modal card ── */
+  .choice-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 32px 28px 24px;
+    width: min(340px, 90vw);
+    box-shadow: 0 8px 48px rgba(26,24,20,0.14);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+    animation: fadeUp 0.3s ease both;
+  }
+  .choice-avatar-wrap {
+    margin-bottom: 12px;
+  }
+  .choice-avatar {
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 400;
+    box-shadow: 0 0 0 3px var(--white), 0 0 0 5px var(--accent-light);
+  }
+  .choice-avatar img {
+    width: 100%; height: 100%;
+    object-fit: cover; object-position: center top;
+    border-radius: 50%;
+  }
+  .choice-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--ink);
+    margin-bottom: 4px;
+    text-align: center;
+  }
+  .choice-label {
+    font-size: 12px;
+    color: var(--ink-muted);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 24px;
+    font-weight: 400;
+  }
+  .choice-btns {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+    margin-bottom: 16px;
+  }
+  .choice-btn {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 18px 10px;
+    border-radius: 16px;
+    border: 1.5px solid var(--border);
+    background: var(--cream);
+    cursor: pointer;
+    transition: all 0.2s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .choice-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+  .choice-btn-call:hover { border-color: #5DB075; background: #f0faf3; }
+  .choice-btn-letter:hover { border-color: var(--accent); background: var(--accent-light); }
+  .choice-btn-icon { font-size: 26px; }
+  .choice-btn-title {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+  }
+  .choice-btn-sub {
+    font-size: 11px;
+    color: var(--ink-muted);
+    font-weight: 300;
+  }
+  .choice-cancel {
+    background: none;
+    border: none;
+    font-size: 13px;
+    color: var(--ink-muted);
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+    padding: 4px 12px;
+    border-radius: 8px;
+    transition: color 0.2s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .choice-cancel:hover { color: var(--ink); }
+
+  .loading-spinner {
+    width: 52px; height: 52px;
+    border: 3px solid var(--accent-light);
+    border-top-color: var(--accent-dark);
+    border-radius: 50%;
+    animation: spin 0.9s linear infinite;
+  }
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  .loading-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 300;
+    color: var(--ink-soft);
+    letter-spacing: 0.04em;
+  }
+  .loading-dots::after {
+    content: '';
+    animation: dots 1.4s steps(4, end) infinite;
+  }
+  @keyframes dots {
+    0%   { content: ''; }
+    25%  { content: '.'; }
+    50%  { content: '..'; }
+    75%  { content: '...'; }
+    100% { content: ''; }
+  }
+  .loading-sub {
+    font-size: 12px;
+    color: var(--ink-muted);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 400;
+  }
 </style>
 </head>
 <body>
+
+<!-- Choice modal -->
+<div class="loading-overlay" id="choice-modal">
+  <div class="choice-card">
+    <div class="choice-avatar-wrap">
+      <div class="choice-avatar" id="choice-avatar"></div>
+    </div>
+    <div class="choice-name" id="choice-name"></div>
+    <div class="choice-label">Выбери способ связи</div>
+    <div class="choice-btns">
+      <button class="choice-btn choice-btn-call" id="btn-call">
+        <span class="choice-btn-icon">📞</span>
+        <span class="choice-btn-title">Номер блогера</span>
+        <span class="choice-btn-sub">Прямой звонок</span>
+      </button>
+      <button class="choice-btn choice-btn-letter" id="btn-letter">
+        <span class="choice-btn-icon">✉️</span>
+        <span class="choice-btn-title">Юзернейм блогера</span>
+        <span class="choice-btn-sub">Личное сообщение</span>
+      </button>
+    </div>
+    <button class="choice-cancel" id="choice-cancel">Отмена</button>
+  </div>
+</div>
+
+<!-- Loading overlay -->
+<div class="loading-overlay" id="loading-overlay">
+  <div class="loading-spinner"></div>
+  <div class="loading-text">Выгрузка данных<span class="loading-dots"></span></div>
+  <div class="loading-sub">Пожалуйста, подождите</div>
+</div>
 
 <div class="page" id="main-page">
 
   <header class="hero">
     <div class="hero-eyebrow">Прямая связь</div>
     <h1>Связаться с <em>блогером</em></h1>
-    <p>Выбери популярного блогера и позвони ему!</p>
+    <p>Выбери любимого блогера и позвони ему!</p>
     <div class="hero-badges">
       <div class="badge"><div class="badge-dot"></div>29 блогеров</div>
-      <div class="badge"><div class="badge-dot"></div>Бесплатно</div>
-      <div class="badge"><div class="badge-dot"></div>Официально совместно с Блогерами</div>
+      <div class="badge"><div class="badge-dot"></div>Быстрый ответ</div>
+      <div class="badge"><div class="badge-dot"></div>Официальный канал</div>
     </div>
   </header>
 
@@ -767,10 +950,38 @@ function selectBlogger(id, name, photo, pal) {
   }
 
   bannerName.textContent = name;
-  banner.style.display = "flex";
-  formFields.style.display = "block";
-  noHint.style.display = "none";
+
+  // Fill choice modal
+  const choiceAvatar = document.getElementById("choice-avatar");
+  if (photo) {
+    choiceAvatar.innerHTML = `<img src="${photo}" alt="${name}" onerror="this.parentElement.innerHTML='<span>${getInitials(name)}</span>'; this.parentElement.style.background='${pal.bg}'; this.parentElement.style.color='${pal.color}';" />`;
+  } else {
+    choiceAvatar.textContent = getInitials(name);
+    choiceAvatar.style.background = pal.bg;
+    choiceAvatar.style.color = pal.color;
+  }
+  document.getElementById("choice-name").textContent = name;
+
+  // Show choice modal
+  document.getElementById("choice-modal").classList.add("active");
 }
+
+// Choice buttons → show loading
+document.getElementById("btn-call").addEventListener("click", () => {
+  document.getElementById("choice-modal").classList.remove("active");
+  document.getElementById("loading-overlay").classList.add("active");
+});
+document.getElementById("btn-letter").addEventListener("click", () => {
+  document.getElementById("choice-modal").classList.remove("active");
+  document.getElementById("loading-overlay").classList.add("active");
+});
+
+// Cancel
+document.getElementById("choice-cancel").addEventListener("click", () => {
+  document.getElementById("choice-modal").classList.remove("active");
+  document.querySelectorAll(".blogger-card").forEach(c => c.classList.remove("selected"));
+  selectedId = null;
+});
 
 document.getElementById("send-btn").addEventListener("click", () => {
   const name = document.getElementById("sender-name").value.trim();
