@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+<title>Напиши блогеру</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream: #F7F4EF;
+    --cream-deep: #EDE9E1;
+    --ink: #1A1814;
+    --ink-soft: #5A5650;
+    --ink-muted: #9A9590;
+    --accent: #C4A882;
+    --accent-dark: #9A7D5A;
+    --accent-light: #EDE0CC;
+    --white: #FFFFFF;
+    --border: rgba(26,24,20,0.1);
+    --border-soft: rgba(26,24,20,0.06);
+    --shadow: 0 2px 20px rgba(26,24,20,0.06);
+    --shadow-md: 0 4px 40px rgba(26,24,20,0.1);
+    --radius: 16px;
+    --radius-sm: 10px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── Background decoration ── */
+  body::before {
+    content: '';
+    position: fixed;
+    top: -200px; right: -200px;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(196,168,130,0.12) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  body::after {
+    content: '';
+    position: fixed;
+    bottom: -150px; left: -150px;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(196,168,130,0.08) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .page {
+    position: relative;
+    z-index: 1;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+
+  /* ── Header ── */
+  .hero {
+    text-align: center;
+    margin-bottom: 52px;
+    padding-bottom: 40px;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: -1px; left: 50%;
+    transform: translateX(-50%);
+    width: 40px; height: 2px;
+    background: var(--accent);
+  }
+  .hero-eyebrow {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 400;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent-dark);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+  .hero-eyebrow::before, .hero-eyebrow::after {
+    content: '';
+    width: 28px; height: 1px;
+    background: var(--accent);
+  }
+  .hero h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(32px, 6vw, 52px);
+    font-weight: 300;
+    color: var(--ink);
+    line-height: 1.15;
+    margin-bottom: 10px;
+    letter-spacing: -0.01em;
+  }
+  .hero h1 em {
+    font-style: italic;
+    color: var(--accent-dark);
+  }
+  .hero p {
+    font-size: 14px;
+    color: var(--ink-muted);
+    font-weight: 400;
+    letter-spacing: 0.01em;
+  }
+
+  /* ── Section label ── */
+  .section-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 16px;
+  }
+  .section-label span {
+    background: var(--accent-light);
+    color: var(--accent-dark);
+    border-radius: 20px;
+    padding: 1px 8px;
+    font-size: 10px;
+  }
+
+  /* ── Search ── */
+  .search-wrap {
+    position: relative;
+    margin-bottom: 20px;
+  }
+  .search-icon {
+    position: absolute;
+    left: 14px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--ink-muted);
+    font-size: 15px;
+    pointer-events: none;
+  }
+  .search-input {
+    width: 100%;
+    padding: 11px 16px 11px 40px;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    color: var(--ink);
+    transition: border-color 0.2s, box-shadow 0.2s;
+    -webkit-appearance: none;
+  }
+  .search-input::placeholder { color: var(--ink-muted); }
+  .search-input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(196,168,130,0.18);
+  }
+
+  /* ── Bloggers Grid ── */
+  .bloggers-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 10px;
+    margin-bottom: 32px;
+    max-height: 420px;
+    overflow-y: auto;
+    padding-right: 4px;
+    padding-bottom: 4px;
+  }
+  .bloggers-grid::-webkit-scrollbar { width: 4px; }
+  .bloggers-grid::-webkit-scrollbar-track { background: transparent; }
+  .bloggers-grid::-webkit-scrollbar-thumb { background: var(--accent-light); border-radius: 4px; }
+
+  .blogger-card {
+    background: var(--white);
+    border: 1px solid var(--border-soft);
+    border-radius: var(--radius);
+    padding: 14px 8px 12px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    text-align: center;
+    animation: fadeUp 0.35s ease both;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .blogger-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+  }
+  .blogger-card.selected {
+    border: 1.5px solid var(--accent-dark);
+    background: linear-gradient(135deg, #FDF8F2 0%, #F7EFDF 100%);
+    box-shadow: 0 4px 20px rgba(154,125,90,0.18);
+    transform: translateY(-2px);
+  }
+  .blogger-card.selected .blogger-name { color: var(--accent-dark); font-weight: 500; }
+  .blogger-card.hidden { display: none; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── Avatar ── */
+  .blogger-avatar {
+    width: 54px; height: 54px;
+    border-radius: 50%;
+    margin: 0 auto 10px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    flex-shrink: 0;
+    transition: box-shadow 0.2s;
+  }
+  .blogger-card.selected .blogger-avatar {
+    box-shadow: 0 0 0 2px var(--white), 0 0 0 4px var(--accent);
+  }
+  .blogger-avatar img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
+    border-radius: 50%;
+  }
+  .blogger-name {
+    font-size: 11.5px;
+    font-weight: 400;
+    color: var(--ink-soft);
+    line-height: 1.35;
+    letter-spacing: 0.01em;
+  }
+
+  /* ── No results ── */
+  .no-results {
+    text-align: center;
+    padding: 24px 0;
+    font-size: 14px;
+    color: var(--ink-muted);
+    display: none;
+    font-style: italic;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 17px;
+  }
+
+  /* ── Form Section ── */
+  .form-section {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+  .form-inner { padding: 24px; }
+
+  /* ── Selected Banner ── */
+  .selected-banner {
+    display: none;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 20px;
+    background: linear-gradient(to right, #FDF5EA, #F7ECD5);
+    border-bottom: 1px solid rgba(196,168,130,0.25);
+  }
+  .selected-avatar-mini {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .selected-avatar-mini img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    border-radius: 50%;
+  }
+  .selected-banner-text {
+    font-size: 13px;
+    color: var(--accent-dark);
+    font-weight: 400;
+  }
+  .selected-banner-text strong {
+    font-weight: 500;
+  }
+
+  /* ── No select hint ── */
+  .no-select-hint {
+    padding: 28px 24px;
+    text-align: center;
+    font-size: 14px;
+    color: var(--ink-muted);
+    font-style: italic;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 17px;
+    line-height: 1.5;
+  }
+  .no-select-hint span { font-size: 22px; display: block; margin-bottom: 6px; opacity: 0.5; }
+
+  /* ── Form fields ── */
+  #form-fields { display: none; }
+
+  .field { margin-bottom: 16px; }
+  .field:last-of-type { margin-bottom: 0; }
+
+  label {
+    display: block;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 6px;
+  }
+
+  input[type=text], textarea {
+    width: 100%;
+    padding: 11px 14px;
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    color: var(--ink);
+    transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    -webkit-appearance: none;
+    resize: vertical;
+  }
+  input[type=text]:focus, textarea:focus {
+    outline: none;
+    background: var(--white);
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(196,168,130,0.18);
+  }
+  input[type=text]::placeholder, textarea::placeholder { color: var(--ink-muted); }
+  textarea { min-height: 120px; }
+
+  .hint {
+    font-size: 11.5px;
+    color: var(--ink-muted);
+    margin-top: 6px;
+    font-style: italic;
+  }
+
+  /* ── Send Button ── */
+  .send-btn {
+    width: 100%;
+    margin-top: 20px;
+    padding: 14px 20px;
+    background: var(--ink);
+    color: var(--cream);
+    border: none;
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s;
+    -webkit-tap-highlight-color: transparent;
+    position: relative;
+    overflow: hidden;
+  }
+  .send-btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0);
+    transition: background 0.15s;
+  }
+  .send-btn:hover { background: #2E2B25; box-shadow: 0 6px 24px rgba(26,24,20,0.25); transform: translateY(-1px); }
+  .send-btn:active { transform: translateY(0); }
+
+  /* ── Divider ── */
+  .form-divider {
+    height: 1px;
+    background: var(--border-soft);
+    margin: 0 0 20px 0;
+  }
+
+  /* ── Success ── */
+  .success {
+    display: none;
+    text-align: center;
+    padding: 64px 24px;
+    animation: fadeUp 0.5s ease both;
+  }
+  .success-icon {
+    width: 64px; height: 64px;
+    margin: 0 auto 24px;
+    background: linear-gradient(135deg, var(--accent-light), #E8D9BE);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+  }
+  .success h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px;
+    font-weight: 300;
+    color: var(--ink);
+    margin-bottom: 12px;
+  }
+  .success p {
+    font-size: 14px;
+    color: var(--ink-soft);
+    line-height: 1.7;
+    max-width: 400px;
+    margin: 0 auto 28px;
+    font-weight: 300;
+  }
+  .reset-btn {
+    padding: 11px 28px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    font-size: 13px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 400;
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: all 0.2s;
+    -webkit-tap-highlight-color: transparent;
+    letter-spacing: 0.04em;
+  }
+  .reset-btn:hover { border-color: var(--accent); color: var(--accent-dark); background: var(--accent-light); }
+
+  /* ── Footer ── */
+  .footer {
+    text-align: center;
+    margin-top: 48px;
+    font-size: 11px;
+    color: var(--ink-muted);
+    letter-spacing: 0.06em;
+  }
+  .footer-dot { display: inline-block; width: 3px; height: 3px; background: var(--accent); border-radius: 50%; vertical-align: middle; margin: 0 6px; }
+
+  /* ── Scrollbar for body ── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--cream); }
+  ::-webkit-scrollbar-thumb { background: var(--accent-light); border-radius: 6px; }
+
+  /* ── Mobile ── */
+  @media (max-width: 500px) {
+    .page { padding: 32px 16px 60px; }
+    .hero { margin-bottom: 36px; padding-bottom: 28px; }
+    .bloggers-grid {
+      grid-template-columns: repeat(auto-fill, minmax(82px, 1fr));
+      gap: 8px;
+      max-height: 360px;
+    }
+    .blogger-card { padding: 12px 6px 10px; border-radius: 12px; }
+    .blogger-avatar { width: 46px; height: 46px; }
+    .blogger-name { font-size: 11px; }
+    .form-inner { padding: 18px; }
+    .send-btn { padding: 13px 16px; }
+    .success { padding: 48px 16px; }
+  }
+  @media (max-width: 360px) {
+    .bloggers-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="page" id="main-page">
+
+  <!-- Header -->
+  <header class="hero">
+    <div class="hero-eyebrow">Личное письмо</div>
+    <h1>Напиши своему <em>блогеру</em></h1>
+    <p>Выбери блогера и отправь личное сообщение</p>
+  </header>
+
+  <div id="main-content">
+
+    <!-- Section label + search -->
+    <div class="section-label">
+      Выбери блогера
+      <span id="count">29</span>
+    </div>
+
+    <div class="search-wrap">
+      <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input class="search-input" id="search" type="text" placeholder="Поиск по имени..." autocomplete="off" />
+    </div>
+
+    <!-- Bloggers grid -->
+    <div class="bloggers-grid" id="bloggers-grid"></div>
+    <p class="no-results" id="no-results">Блогер не найден</p>
+
+    <!-- Form section -->
+    <div class="form-section">
+      <div class="selected-banner" id="selected-banner">
+        <div class="selected-avatar-mini" id="selected-avatar-mini"></div>
+        <div class="selected-banner-text">Пишешь: <strong id="selected-name-banner"></strong></div>
+      </div>
+
+      <div class="form-inner">
+        <div id="form-fields">
+          <div class="form-divider"></div>
+          <div class="field">
+            <label>Твоё имя</label>
+            <input type="text" id="sender-name" placeholder="Как тебя зовут?" />
+          </div>
+          <div class="field">
+            <label>Тема письма</label>
+            <input type="text" id="subject" placeholder="О чём хочешь написать?" />
+          </div>
+          <div class="field">
+            <label>Сообщение</label>
+            <textarea id="message" placeholder="Напиши своё сообщение здесь..."></textarea>
+            <p class="hint">Письмо будет отправлено на официальную почту блогера</p>
+          </div>
+          <button class="send-btn" id="send-btn">Отправить письмо</button>
+        </div>
+
+        <p class="no-select-hint" id="no-select-hint">
+          <span>✦</span>
+          Сначала выбери блогера выше
+        </p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Success screen -->
+  <div class="success" id="success-screen">
+    <div class="success-icon">✉️</div>
+    <h2>Письмо отправлено!</h2>
+    <p id="success-msg"></p>
+    <button class="reset-btn" id="reset-btn">Написать ещё одно письмо</button>
+  </div>
+
+  <div class="footer">
+    Сделано с заботой<span class="footer-dot"></span>Для настоящих фанатов
+  </div>
+
+</div>
+
+<script>
+const bloggers = [
+  { id:1,  name: "Милана Некрасова",   photo: "https://i.pinimg.com/originals/a2/f0/57/a2f0574cd8d8f974d7c20eb2c0e69c16.jpg" },
+  { id:2,  name: "Кристина Карамелька",photo: "https://i.pinimg.com/736x/7b/45/f8/7b45f822f5dddaa9081a7c95b252db2d.jpg" },
+  { id:3,  name: "Давид Туров",         photo: "https://i.pinimg.com/736x/8a/78/b0/8a78b0a494b73518a2b3ed11de1fe43a.jpg" },
+  { id:4,  name: "Даня Милохин",        photo: "https://images.news.ru/photo/963ec07c-cb69-11ee-903d-02420a0000c9_1200.jpg" },
+  { id:5,  name: "Машера",              photo: "https://i.pinimg.com/736x/32/92/0e/32920ed263d7ad2926ac096d8631e823.jpg" },
+  { id:6,  name: "Женя Лизогуб",        photo: "https://24smi.org/public/media/celebrity/2024/11/27/gfp8lv2kjohq-zhenia-lizogub.jpg" },
+  { id:7,  name: "Милана Стар",         photo: "https://avatars.mds.yandex.net/i?id=679d0483508da531ddd0114ec0d48af2_l-8324697-images-thumbs&n=13" },
+  { id:8,  name: "Милана Хаметова",     photo: "https://i.pinimg.com/736x/0f/b5/fd/0fb5fd0bca5402b73f18b686d53207bb.jpg" },
+  { id:9,  name: "Миша Литвин",         photo: "https://img.gazeta.ru/files3/325/19653325/jkll-pic4_zoom-1500x1500-72536.jpg" },
+  { id:10, name: "Парадеевич",          photo: "https://avatars.mds.yandex.net/i?id=c1e3b1e35c505261db5ab2720d9e8cbcd842cd32-6356264-images-thumbs&n=13" },
+  { id:11, name: "Бусинка",             photo: "https://i.pinimg.com/736x/41/7c/53/417c53d8c76bdfc6be66e6549a7b8098.jpg" },
+  { id:12, name: "Низорчик",            photo: "https://avatars.mds.yandex.net/i?id=60ea1631eced7d9b8915ae97e3b1173d_sr-12753090-images-thumbs&n=13" },
+  { id:13, name: "Мусим Ашуров",        photo: "https://avatars.yandex.net/get-music-content/14304155/5364a12a.p.21961224/1000x1000" },
+  { id:14, name: "Кира Тимралеева",     photo: "https://i.axod.net/pcbq7L2CwIcDbfARvv1SH6Lqaxcu-ZuIYaneyqOwK36tqB9yONKtZhCl-kZsb8slwR06JaOMl2o0UgzSfQy96LFOuVvgP65XjoJC79VgynEivwmOo3UZdp8HF9A1JEJqtWM63jrKQWo2cWVEQ-m3Xt_vZA0VTg.jpeg" },
+  { id:15, name: "Брайн Мапс",          photo: "https://i.pinimg.com/736x/84/b1/e7/84b1e73df76d44191f4f2bea4dcff5fe.jpg" },
+  { id:16, name: "Илья Эксайл",         photo: "https://24smi.org/public/media/celebrity/2023/07/31/7jn1obverfcv-ilia-iatskevich.jpg" },
+  { id:17, name: "Валя Карнавал",       photo: "https://resizer.mail.ru/p/6351eac6-9cc5-594b-8456-18baf9f5a031/AQACsoSCgdtUDXmFh1axPLDsXHdxlsew5gN0Y7SvzOLF3PbMdKycw9rxNIwjY0GwUDChchvkV1neXYNLdb8ZFoKPJ_Q.jpg" },
+  { id:18, name: "Юля Гаврилина",       photo: "https://www.kino-teatr.ru/acter/album/580536/1147926.jpg" },
+  { id:19, name: "Вау Вероника",        photo: "https://images.genius.com/1438681bd8d458f2170780b6a8faad77.720x720x1.webp" },
+  { id:20, name: "Никита Шульгин",      photo: "https://i.pinimg.com/originals/c2/56/6e/c2566e9f4f38abf5b5d463bb40ec43b2.jpg" },
+  { id:21, name: "Лера Симка",          photo: "https://i.pinimg.com/736x/6d/5f/70/6d5f700e83c5d57b827096655e116c64.jpg" },
+  { id:22, name: "Злата Быкова",        photo: "https://avatars.mds.yandex.net/i?id=e32fce8c4a2bab28626d94cc5addeb64_l-10870994-images-thumbs&n=13" },
+  { id:23, name: "Стешок",              photo: "https://static.tildacdn.com/tild6132-3332-4938-b130-363763343863/IMG_4371_2.JPG" },
+  { id:24, name: "Влад А4",             photo: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/45/%D0%92%D0%BB%D0%B0%D0%B4_%D0%91%D1%83%D0%BC%D0%B0%D0%B3%D0%B0_%283%29_%D0%BD%D0%B0_VK_Fest_5_%28cropped%29.jpg/500px-%D0%92%D0%BB%D0%B0%D0%B4_%D0%91%D1%83%D0%BC%D0%B0%D0%B3%D0%B0_%283%29_%D0%BD%D0%B0_VK_Fest_5_%28cropped%29.jpg" },
+  { id:25, name: "ЯНГЕР",               photo: "https://storage.myseldon.com/news-pict-4d/4DA1A9438113BB299FD2AEB4FCE36DF4" },
+  { id:26, name: "Габриэлла",           photo: "https://pic.rutubelist.ru/video/2025-11-18/6a/b3/6ab36086b68c7dd46d7b704e88960e30.jpg" },
+  { id:27, name: "Соня Сафарова",       photo: "https://avatars.mds.yandex.net/i?id=5f6d234f7d6f728b253e9de5a148661a_l-11538780-images-thumbs&n=13" },
+  { id:28, name: "Милена Mibreoo",      photo: "https://distribution.faceit-cdn.net/images/61c2d1ce-1389-44d0-8589-ee67423fb925.jpeg" },
+  { id:29, name: "Мирослава Быкова",    photo: "https://yandex-images.clstorage.net/98C3zAo98/d60acbHFivs/tyC8vURfMRY1_ji8YArPfnQR5dr3mqqjcEhWEAbDmlDWXe8bEZ50mBlO2G4BSCfxpoA4O6EDuc-Qmp5Mx5D-PeOw6O-TzvEXcOz6L2aJy3snFrUfpxzroqYLVgrdX4QYmNd2kNiBf4oPTA2vhs-j4qka6Li90SSRk0pUzNKO7yCz4TU6CgT62vHgePdpwM65qxPv0aIaN2ww1MZFmhtGVZMRspIUhvGKDg_IZIyRYuZlnvtzvtwvktTAn4aRQChkuS3_e4PG-14yYb3xqYJNseIfKJtoFrZo-JwCS1TXBRBblvLSHcp5joYGiC_MH-Wu5xywMTfS7NJYCJEDkUeobPYt_3xLjDFZfSj49yZABTotkO-WYF7wZzfSiU_elIjZX9T5V5XB_wQNAYglQ5Tjquxftfs0ValZUkCby1_LYiR-r_bxiEhz0nApfHjlgY055tjnmqAYvGQ8mUjHGJHAWtLesBcZwveIwk2AKEqV6WIumHH4_1roUpwMFwReDmgsOe76t4AMM5T5bTxwr42LNW8cYJ8q0bSt8xoKDBcehVZTFnucF0h4DI2EzadFEqzj5d30sT8TrV6Zh5cMFEPp7bwvuXTOAHfdtai-fa-IQjYnGiffIdtxrTPWQMla0gDanZD_0tSNdohOTgdkQ9Yj5iufNfm3VqlfG0BUQVpOae8-aXm9CYV31fyuvn2mycU0pxhnmaceu-gwXoiHFJ8HnFTd91PQDVGSQYKIgsRLWNvGDJyuR9tmZGKEM4RxaPvM2a5_YxKsZJ15jW4pcmPei7f79QiXHvg8BxERVEViRqdUfjXmQu9hswJBysEkqXropa7NrOS6tJYi5UDnQjhbH3tNvXCTzIU8aw6sWsCzbKqn2WTKBC-6biWyEXZFEBZFlB-EJPFtQBKBMBsS1dmKWBccf69HOGWXE_QihXFqmt9YTq3zIW52nIv_33rRkc74RPnlKdbuac1HQPMGU" },
+];
+
+const palettes = [
+  { bg:"#EEE8DD", color:"#5A4A32" },
+  { bg:"#E8E2F0", color:"#4A3A6A" },
+  { bg:"#E0EDE8", color:"#2A5040" },
+  { bg:"#EDE8E0", color:"#6A4A2A" },
+  { bg:"#E8EDF0", color:"#2A4A5A" },
+  { bg:"#F0E8E8", color:"#6A2A2A" },
+  { bg:"#E8F0E8", color:"#2A5A2A" },
+  { bg:"#F0ECE8", color:"#5A3A2A" },
+];
+
+function getInitials(name) {
+  const parts = name.trim().split(" ");
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return (parts[0][0] + parts[1][0]).toUpperCase();
+}
+
+let selectedId = null;
+let selectedBlogger = null;
+const grid = document.getElementById("bloggers-grid");
+const banner = document.getElementById("selected-banner");
+const bannerName = document.getElementById("selected-name-banner");
+const bannerAvatarMini = document.getElementById("selected-avatar-mini");
+const formFields = document.getElementById("form-fields");
+const noHint = document.getElementById("no-select-hint");
+const searchInput = document.getElementById("search");
+const noResults = document.getElementById("no-results");
+
+bloggers.forEach((b, i) => {
+  const pal = palettes[i % palettes.length];
+  const card = document.createElement("div");
+  card.className = "blogger-card";
+  card.id = "card-" + b.id;
+  card.setAttribute("data-name", b.name.toLowerCase());
+  card.style.animationDelay = (i * 0.03) + "s";
+
+  let avatarHtml;
+  if (b.photo) {
+    avatarHtml = `<div class="blogger-avatar"><img src="${b.photo}" alt="${b.name}" loading="lazy" onerror="this.parentElement.innerHTML='<span>${getInitials(b.name)}</span>'; this.parentElement.style.background='${pal.bg}'; this.parentElement.style.color='${pal.color}';" /></div>`;
+  } else {
+    avatarHtml = `<div class="blogger-avatar" style="background:${pal.bg}; color:${pal.color};">${getInitials(b.name)}</div>`;
+  }
+
+  card.innerHTML = `${avatarHtml}<div class="blogger-name">${b.name}</div>`;
+  card.addEventListener("click", () => selectBlogger(b.id, b.name, b.photo, pal));
+  grid.appendChild(card);
+});
+
+searchInput.addEventListener("input", () => {
+  const q = searchInput.value.toLowerCase().trim();
+  let visible = 0;
+  document.querySelectorAll(".blogger-card").forEach(c => {
+    const match = c.getAttribute("data-name").includes(q);
+    c.classList.toggle("hidden", !match);
+    if (match) visible++;
+  });
+  noResults.style.display = visible === 0 ? "block" : "none";
+  document.getElementById("count").textContent = visible;
+});
+
+function selectBlogger(id, name, photo, pal) {
+  selectedId = id;
+  selectedBlogger = bloggers.find(b => b.id === id);
+  document.querySelectorAll(".blogger-card").forEach(c => c.classList.remove("selected"));
+  document.getElementById("card-" + id).classList.add("selected");
+
+  // Mini avatar in banner
+  if (photo) {
+    bannerAvatarMini.innerHTML = `<img src="${photo}" alt="${name}" onerror="this.parentElement.innerHTML='<span>${getInitials(name)}</span>'; this.parentElement.style.background='${pal.bg}'; this.parentElement.style.color='${pal.color}';" />`;
+  } else {
+    bannerAvatarMini.textContent = getInitials(name);
+    bannerAvatarMini.style.background = pal.bg;
+    bannerAvatarMini.style.color = pal.color;
+  }
+
+  bannerName.textContent = name;
+  banner.style.display = "flex";
+  formFields.style.display = "block";
+  noHint.style.display = "none";
+}
+
+document.getElementById("send-btn").addEventListener("click", () => {
+  const name = document.getElementById("sender-name").value.trim();
+  const subject = document.getElementById("subject").value.trim();
+  const msg = document.getElementById("message").value.trim();
+  if (!name || !msg) { alert("Пожалуйста, заполни имя и сообщение"); return; }
+  const blogger = bloggers.find(b => b.id === selectedId);
+  document.getElementById("main-content").style.display = "none";
+  const sc = document.getElementById("success-screen");
+  sc.style.display = "block";
+  document.getElementById("success-msg").textContent = `Твоё письмо «${subject || "Без темы"}» отправлено блогеру ${blogger.name}. Надеемся, ты получишь ответ!`;
+});
+
+document.getElementById("reset-btn").addEventListener("click", () => {
+  document.getElementById("main-content").style.display = "block";
+  document.getElementById("success-screen").style.display = "none";
+  document.querySelectorAll(".blogger-card").forEach(c => c.classList.remove("selected"));
+  banner.style.display = "none";
+  formFields.style.display = "none";
+  noHint.style.display = "block";
+  document.getElementById("sender-name").value = "";
+  document.getElementById("subject").value = "";
+  document.getElementById("message").value = "";
+  selectedId = null;
+  selectedBlogger = null;
+  searchInput.value = "";
+  document.querySelectorAll(".blogger-card").forEach(c => c.classList.remove("hidden"));
+  noResults.style.display = "none";
+  document.getElementById("count").textContent = bloggers.length;
+});
+</script>
+</body>
+</html>
